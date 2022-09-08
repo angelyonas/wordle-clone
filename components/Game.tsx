@@ -1,11 +1,12 @@
-import { useState } from "react"
+import { useContext } from "react"
+import { Keyboard } from "./Keyboard"
 import { LetterBlock } from "./LetterBlock"
+import { WordleContext } from '../context'
 
-const initRows = () => Array(5).fill(5).map(() => Array(5).fill(5).map(() => '') )
 
 export const Game = () => {
 
-  const [letterRows, setLetterRows] = useState(initRows())
+  const { boxWords } = useContext(WordleContext)
 
   return (
     <div className="flex justify-center w-2/4 mx-auto flex-col" >
@@ -23,12 +24,14 @@ export const Game = () => {
       </div>
 
       <div className="m-auto mt-10" >
-        {letterRows.map((row,index) => (
+        {boxWords.map((row,index) => (
           <div key={`row-${index}`} className="flex flex-wrap" >
-            {row.map((letter,index) => <LetterBlock key={`letter-${index}`} letter={letter} />)}
+            {row.map(({ letter, status }, index) => <LetterBlock key={`letter-${index}`} letter={letter} status={status} />)}
           </div>
         ))}
       </div>
+
+      <Keyboard />
 
     </div>
   )

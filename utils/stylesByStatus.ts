@@ -2,7 +2,7 @@ export type StatusTypes = "correct" | "needed" | "incorrect" | "writing" | "empt
 
 export const getStylesByStatus = (status: StatusTypes) => {
   const initialStyles =
-    "w-16 h-16 rounded-md border-2 border-black m-2 flex items-center justify-center dark:bg-gray-800 dark:border-white";
+    "rounded-md border-2 border-black flex items-center justify-center dark:bg-gray-800 dark:border-white";
 
   if (status && status == "correct") {
     return `${initialStyles} bg-lime-600 border-lime-600 dark:bg-lime-600 dark:border-lime-600`;

@@ -11,7 +11,7 @@ export const LetterBlock = ({ letter, status  = 'empty' }: Props) => {
   const blockStyles = useMemo(() => getStylesByStatus(status), [status]);
 
   return (
-    <div className={blockStyles}>
+    <div className={`w-16 h-16 m-2 ${blockStyles}`}>
       <p className="text-3xl font-bold">{letter}</p>
     </div>
   );
