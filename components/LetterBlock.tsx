@@ -1,13 +1,12 @@
-import { useMemo } from "react";
-import { getStylesByStatus, StatusTypes } from '../utils'
+import { useMemo } from 'react';
+import { getStylesByStatus, StatusTypes } from '../utils';
 
 interface Props {
   letter?: string;
   status?: StatusTypes;
 }
 
-export const LetterBlock = ({ letter, status  = 'empty' }: Props) => {
-
+export const LetterBlock = ({ letter, status = 'empty' }: Props) => {
   const blockStyles = useMemo(() => getStylesByStatus(status), [status]);
 
   return (

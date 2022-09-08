@@ -1,34 +1,40 @@
-import { ReactElement, useReducer } from "react";
-import { wordleReducer } from './reducer'
-import { WordleContext } from "./Context";
-import { StatusTypes } from '../utils'
+import { ReactElement, useReducer } from 'react';
+import { wordleReducer } from './reducer';
+import { WordleContext } from './Context';
+import { StatusTypes } from '../utils';
 
 export interface SpaceLetter {
   letter: string;
-  status: StatusTypes
+  status: StatusTypes;
 }
 
+export type StatusGameTypes = 'earned' | 'lost' | 'playing'
+
 export interface WordleState {
-  secretWord:string;
+  secretWord: string;
   boxWords: Array<Array<SpaceLetter>>;
-  currentRow:number;
+  currentRow: number;
+  isFinished: boolean;
+  statusGame: StatusGameTypes;
 }
 
 export interface Props {
-  children: ReactElement
+  children: ReactElement;
 }
 
 const INITIAL_STATE: WordleState = {
-  secretWord: "ANGEL",
+  secretWord: 'ANGEL',
   boxWords: Array(5)
     .fill(5)
     .map(() =>
       Array(5)
         .fill(5)
-        .map(() => ({ letter: '', status: 'empty'}))
+        .map(() => ({ letter: '', status: 'empty' }))
     ),
-  currentRow: 0
-}; 
+  currentRow: 0,
+  isFinished: false,
+  statusGame: 'playing'
+};
 
 export const WordleProvider = ({ children }: Props) => {
   const [state, dispatch] = useReducer(wordleReducer, INITIAL_STATE);
@@ -39,7 +45,7 @@ export const WordleProvider = ({ children }: Props) => {
    */
   const addSecretWord = (word: string) => {
     localStorage.sw = word;
-    dispatch({ type: "[wordle] Add-secret-word", payload: word });
+    dispatch({ type: '[wordle] Add-secret-word', payload: word });
   };
 
   /**
@@ -67,12 +73,12 @@ export const WordleProvider = ({ children }: Props) => {
       return row;
     });
 
-    dispatch({ type: "[keyboard] Add-letter", payload: boxWordsUpdated });
+    dispatch({ type: '[keyboard] Add-letter', payload: boxWordsUpdated });
   };
 
   /**
    * Action to remove letter in row
-   * @returns 
+   * @returns
    */
   const removeLetter = () => {
     if (state.boxWords[state.currentRow].every((space) => !space)) {
@@ -98,40 +104,46 @@ export const WordleProvider = ({ children }: Props) => {
       return row;
     });
 
-    dispatch({ type: "[keyboard] Remove-letter", payload: boxWordsUpdated });
+    dispatch({ type: '[keyboard] Remove-letter', payload: boxWordsUpdated });
   };
 
   const validateWord = () => {
-    if (!state.boxWords[state.currentRow].every(space => space.letter)) {
-      return false
+    if (!state.boxWords[state.currentRow].every((space) => space.letter)) {
+      return false;
     }
 
-    const rowUpdated: Array<SpaceLetter> = state.boxWords[state.currentRow].map((space, index) => {
-      const indexWord = state.secretWord.indexOf(space.letter);
-      if (indexWord === -1) {
-        return {
-          ...space,
-          status: 'incorrect'
+    const rowUpdated: Array<SpaceLetter> = state.boxWords[state.currentRow].map(
+      (space, index) => {
+        const indexWord = state.secretWord.indexOf(space.letter);
+        if (indexWord === -1) {
+          return {
+            ...space,
+            status: 'incorrect',
+          };
         }
-      }
 
-      if (indexWord === index ) {
-        return {
-          ...space,
-          status: 'correct'
+        if (indexWord === index) {
+          return {
+            ...space,
+            status: 'correct',
+          };
         }
-      }
 
-      if (indexWord !== index) {
-        return {
-          ...space,
-          status: 'needed'
+        if (indexWord !== index) {
+          return {
+            ...space,
+            status: 'needed',
+          };
         }
+
+        return space;
       }
-
-      return space;
-
-    });
+    );
+  
+    const isWinner = rowUpdated.every((space) => space.status === 'correct');
+    const currentRowUpdated = state.currentRow + 1;
+    const isFinished = currentRowUpdated > 4;
+    const statusGame:StatusGameTypes = isWinner ? 'earned' : isFinished ? 'lost' : 'playing';
 
     const boxWordsUpdated = state.boxWords.map((row, index) => {
       if (index === state.currentRow) {
@@ -142,12 +154,13 @@ export const WordleProvider = ({ children }: Props) => {
 
     const payload = {
       boxWords: boxWordsUpdated,
-      currentRow: state.currentRow + 1,
+      currentRow: currentRowUpdated,
+      statusGame,
+      isFinished
     };
 
-    dispatch({ type: '[wordle] Validate-word', payload })
-
-  }
+    dispatch({ type: '[wordle] Validate-word', payload });
+  };
 
   return (
     <WordleContext.Provider
@@ -163,4 +176,4 @@ export const WordleProvider = ({ children }: Props) => {
       {children}
     </WordleContext.Provider>
   );
-}
+};

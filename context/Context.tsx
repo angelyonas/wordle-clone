@@ -1,8 +1,11 @@
 import { createContext } from 'react';
-import { SpaceLetter } from './Provider'
+import { SpaceLetter, StatusGameTypes } from './Provider';
 
 interface ContextProps {
   boxWords: Array<Array<SpaceLetter>>;
+  statusGame: StatusGameTypes;
+  isFinished: boolean;
+  secretWord:string;
   addLetter: (letter: string) => void;
   addSecretWord: (word: string) => void;
   removeLetter: () => void;

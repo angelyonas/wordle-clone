@@ -1,19 +1,19 @@
-import { LetterBlock } from "./LetterBlock";
+import { LetterBlock } from './LetterBlock';
 
 interface Props {
   onPlay: () => void;
 }
 
 export const Indications = ({ onPlay }: Props) => {
-  const catWord = "GATOS";
-  const vocalWord = "VOCAL";
-  const singingWord = "CANTO";
+  const catWord = 'GATOS';
+  const vocalWord = 'VOCAL';
+  const singingWord = 'CANTO';
 
   /**
    * handle on click play button
    */
   const handleClickPlay = () => {
-    localStorage.visited = "true";
+    localStorage.visited = 'true';
     onPlay();
   };
 
@@ -30,11 +30,11 @@ export const Indications = ({ onPlay }: Props) => {
       </p>
       <p className="mb-2 font-bold">Ejemplos</p>
       <div className="flex justify-center">
-        {catWord.split("").map((letter, index) => (
+        {catWord.split('').map((letter, index) => (
           <LetterBlock
             key={`${letter}-${index}`}
             letter={letter}
-            status={letter == "G" ? "correct" : "writing"}
+            status={letter == 'G' ? 'correct' : 'writing'}
           />
         ))}
       </div>
@@ -42,11 +42,11 @@ export const Indications = ({ onPlay }: Props) => {
         La letra <b>G</b> está en la palabra y en la posición correcta.
       </p>
       <div className="flex justify-center">
-        {vocalWord.split("").map((letter, index) => (
+        {vocalWord.split('').map((letter, index) => (
           <LetterBlock
             key={`${letter}-${index}`}
             letter={letter}
-            status={letter == "C" ? "needed" : "writing"}
+            status={letter == 'C' ? 'needed' : 'writing'}
           />
         ))}
       </div>
@@ -54,11 +54,11 @@ export const Indications = ({ onPlay }: Props) => {
         La letra <b>C</b> está en la palabra pero en la posición incorrecta.
       </p>
       <div className="flex justify-center">
-        {singingWord.split("").map((letter, index) => (
+        {singingWord.split('').map((letter, index) => (
           <LetterBlock
             key={`${letter}-${index}`}
             letter={letter}
-            status={letter == "O" ? "incorrect" : "writing"}
+            status={letter == 'O' ? 'incorrect' : 'writing'}
           />
         ))}
       </div>
