@@ -1,7 +1,7 @@
 import { useEffect, useContext } from 'react';
 import type { NextPage } from 'next';
 import { Layout, Game } from '../components';
-import { WordleContext } from '../context'
+import { WordleContext } from '../context';
 
 const Home: NextPage = () => {
   const { addSecretWord, getStatsFromStorage } = useContext(WordleContext);

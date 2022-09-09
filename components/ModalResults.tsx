@@ -1,20 +1,30 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useContext, useMemo, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { WordleContext } from '../context'
+import { WordleContext } from '../context';
 
 interface Props {
-  open:boolean;
+  open: boolean;
   onClose: () => void;
 }
 
 export const ModalResults = ({ open, onClose }: Props) => {
-  const { statusGame, isFinished, secretWord, gamesPlayed, gamesEarned, minutes, getStatsFromStorage } = useContext(WordleContext);
-  const isLostTheGame = useMemo(() => isFinished && statusGame === 'lost', [isFinished, statusGame])
+  const {
+    statusGame,
+    isFinished,
+    secretWord,
+    gamesPlayed,
+    gamesEarned,
+    minutes,
+    getStatsFromStorage,
+  } = useContext(WordleContext);
+  const isLostTheGame = useMemo(
+    () => isFinished && statusGame === 'lost',
+    [isFinished, statusGame]
+  );
   const [timeText, setTimeText] = useState('--:--');
 
   useEffect(() => {
-
     let interval: NodeJS.Timer;
     const timer = (duration: number) => {
       let timing = duration;
@@ -40,8 +50,7 @@ export const ModalResults = ({ open, onClose }: Props) => {
     }
 
     return () => interval && clearInterval(interval);
-
-  }, [minutes])
+  }, [minutes]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -114,4 +123,4 @@ export const ModalResults = ({ open, onClose }: Props) => {
       </Dialog>
     </Transition.Root>
   );
-}
+};

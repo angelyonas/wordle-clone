@@ -17,7 +17,10 @@ const isSpecialKey = (letter: string) =>
 
 export const Key = ({ letter, status }: Props) => {
   const { addLetter, removeLetter, validateWord } = useContext(WordleContext);
-  const blockStyles = useMemo(() => getStylesByStatus(status, 'keyboard'), [status]);
+  const blockStyles = useMemo(
+    () => getStylesByStatus(status, 'keyboard'),
+    [status]
+  );
   const specialKey = useMemo(() => isSpecialKey(letter), [letter]);
 
   /**

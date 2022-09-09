@@ -73,7 +73,7 @@ export const Keyboard = () => {
    * @param keyboardRow list of rows
    * @returns array
    */
-  const resetKeys = (keyboardRow: Array<RowInterface>):Array<RowInterface> =>
+  const resetKeys = (keyboardRow: Array<RowInterface>): Array<RowInterface> =>
     keyboardRow.map((space) => ({ ...space, status: 'empty' }));
 
   useEffect(() => {

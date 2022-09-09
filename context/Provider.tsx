@@ -68,7 +68,7 @@ export const WordleProvider = ({ children }: Props) => {
 
   /**
    * Get random number
-   * @param max 
+   * @param max
    * @returns number
    */
   const getRandomIndex = (max: number) => Math.floor(Math.random() * max);
@@ -86,7 +86,7 @@ export const WordleProvider = ({ children }: Props) => {
 
   /**
    * Verify unic and word with 5 letters
-   * @param word 
+   * @param word
    * @returns boolean
    */
   const isValidWord = (word = '') => {

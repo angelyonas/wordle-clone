@@ -27,7 +27,7 @@ export const SwitchMode = () => {
     }
   }, []);
 
-  const handleChange = (evt:IEvent) => {
+  const handleChange = (evt: IEvent) => {
     const { checked } = evt.target;
     setSwitchValue(checked);
     if (checked) {

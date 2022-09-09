@@ -52,27 +52,28 @@ export const wordleReducer = (
       };
 
     case '[wordle] Validate-word': {
-      const { isFinished, gamesPlayed, gamesEarned, boxWords, lettersUsed } = action.payload;
+      const { isFinished, gamesPlayed, gamesEarned, boxWords, lettersUsed } =
+        action.payload;
 
       if (isFinished) {
         localStorage.played = gamesPlayed;
         localStorage.earned = gamesEarned;
         localStorage.isFinished = true;
         localStorage.currentTime = new Date().getTime();
-        localStorage.box = JSON.stringify(boxWords)
-        localStorage.lettersUsed = JSON.stringify(lettersUsed)
+        localStorage.box = JSON.stringify(boxWords);
+        localStorage.lettersUsed = JSON.stringify(lettersUsed);
       }
 
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
     }
 
-      case '[wordle] Get-stats':
+    case '[wordle] Get-stats':
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
 
     default:
