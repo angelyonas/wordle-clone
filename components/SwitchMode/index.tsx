@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
 import styles from './switchMode.module.css';
 
+interface IEvent {
+  target: ITarget;
+}
+
+interface ITarget {
+  checked: boolean;
+}
+
 export const SwitchMode = () => {
   const [switchValue, setSwitchValue] = useState(false);
 
@@ -19,7 +27,7 @@ export const SwitchMode = () => {
     }
   }, []);
 
-  const handleChange = (evt) => {
+  const handleChange = (evt:IEvent) => {
     const { checked } = evt.target;
     setSwitchValue(checked);
     if (checked) {
