@@ -5,13 +5,28 @@ interface ValidatePayload {
   currentRow: number;
   statusGame: StatusGameTypes;
   isFinished: boolean;
+  gamesPlayed: number;
+  gamesEarned: number;
+  minutes: number;
+  lettersUsed: Array<SpaceLetter>;
+}
+
+interface StatsPayload {
+  gamesPlayed: number;
+  gamesEarned: number;
+  currentTime: Date | null;
+  isFinished: boolean;
+  boxWords: Array<Array<SpaceLetter>>;
+  minutes: number;
+  lettersUsed: Array<SpaceLetter>;
 }
 
 type WordleActionType =
   | { type: '[keyboard] Add-letter'; payload: Array<Array<SpaceLetter>> }
   | { type: '[keyboard] Remove-letter'; payload: Array<Array<SpaceLetter>> }
   | { type: '[wordle] Add-secret-word'; payload: string }
-  | { type: '[wordle] Validate-word'; payload: ValidatePayload };
+  | { type: '[wordle] Validate-word'; payload: ValidatePayload }
+  | { type: '[wordle] Get-stats'; payload: StatsPayload };
 
 export const wordleReducer = (
   state: WordleState,
@@ -36,13 +51,28 @@ export const wordleReducer = (
         boxWords: action.payload,
       };
 
-    case '[wordle] Validate-word':
+    case '[wordle] Validate-word': {
+      const { isFinished, gamesPlayed, gamesEarned, boxWords, lettersUsed } = action.payload;
+
+      if (isFinished) {
+        localStorage.played = gamesPlayed;
+        localStorage.earned = gamesEarned;
+        localStorage.isFinished = true;
+        localStorage.currentTime = new Date().getTime();
+        localStorage.box = JSON.stringify(boxWords)
+        localStorage.lettersUsed = JSON.stringify(lettersUsed)
+      }
+
       return {
         ...state,
-        currentRow: action.payload.currentRow,
-        boxWords: action.payload.boxWords,
-        statusGame: action.payload.statusGame,
-        isFinished: action.payload.isFinished
+        ...action.payload
+      };
+    }
+
+      case '[wordle] Get-stats':
+      return {
+        ...state,
+        ...action.payload
       };
 
     default:

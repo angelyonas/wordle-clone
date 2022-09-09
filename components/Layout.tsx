@@ -7,7 +7,7 @@ interface Props {
 
 export const Layout = ({ children }: Props) => {
   return (
-    <main className="bg-zinc-100 dark:bg-gray-800/90 py-20 min-h-screen">
+    <main className="bg-[#E5E5E5] dark:bg-gray-800 py-20 min-h-screen">
       <Head>
         <title>Worlde - clone</title>
       </Head>

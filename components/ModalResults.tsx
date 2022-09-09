@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useContext, useMemo } from 'react';
+import { Fragment, useContext, useMemo, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { WordleContext } from '../context'
 
@@ -9,16 +9,43 @@ interface Props {
 }
 
 export const ModalResults = ({ open, onClose }: Props) => {
-  const { statusGame, isFinished, secretWord } = useContext(WordleContext);
+  const { statusGame, isFinished, secretWord, gamesPlayed, gamesEarned, minutes, getStatsFromStorage } = useContext(WordleContext);
   const isLostTheGame = useMemo(() => isFinished && statusGame === 'lost', [isFinished, statusGame])
+  const [timeText, setTimeText] = useState('--:--');
+
+  useEffect(() => {
+
+    let interval: NodeJS.Timer;
+    const timer = (duration: number) => {
+      let timing = duration;
+      interval = setInterval(() => {
+        let minutes = `${parseInt(`${timing / 60}`, 10)}`;
+        let seconds = `${parseInt(`${timing % 60}`, 10)}`;
+
+        minutes = parseInt(minutes) < 10 ? '0' + minutes : minutes;
+        seconds = parseInt(seconds) < 10 ? '0' + seconds : seconds;
+
+        setTimeText(minutes + ':' + seconds);
+
+        if (--timing < 0) {
+          timing = duration;
+          getStatsFromStorage();
+        }
+      }, 1000);
+    };
+
+    if (isFinished) {
+      const remaining = 60 * (5 - minutes);
+      timer(remaining);
+    }
+
+    return () => interval && clearInterval(interval);
+
+  }, [minutes])
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative z-10"
-        onClose={onClose}
-      >
+      <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -28,7 +55,7 @@ export const ModalResults = ({ open, onClose }: Props) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-gray-500 dark:bg-gray-800/90 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -42,8 +69,8 @@ export const ModalResults = ({ open, onClose }: Props) => {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-[#F3F3F3] text-left shadow-xl border border-black transition-all sm:my-8 sm:w-full sm:max-w-md">
-                <div className="bg-[#F3F3F3] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-[#F3F3F3] dark:bg-gray-800 text-left shadow-xl border border-black transition-all sm:my-8 sm:w-full sm:max-w-md">
+                <div className="bg-[#F3F3F3] dark:bg-gray-800 dark:text-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <div className="mt-3 text-center">
                     <Dialog.Title
                       as="h3"
@@ -53,23 +80,23 @@ export const ModalResults = ({ open, onClose }: Props) => {
                     </Dialog.Title>
                     <div className="mt-2 flex justify-between w-full">
                       <div className="text-center">
-                        <p className="text-3xl font-bold">8</p>
+                        <p className="text-3xl font-bold">{gamesPlayed}</p>
                         <p>Jugadas</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-3xl font-bold">8</p>
+                        <p className="text-3xl font-bold">{gamesEarned}</p>
                         <p>Victorias</p>
                       </div>
                     </div>
-                    { isLostTheGame && (
+                    {isLostTheGame && (
                       <p className="my-8">
-                      La palabra era: <b>{secretWord}</b>
+                        La palabra era: <b>{secretWord}</b>
                       </p>
                     )}
-                    { isFinished && (
+                    {isFinished && (
                       <div className="mt-6">
                         <p>SIGUIENTE PALABRA</p>
-                        <p className="font-bold text-xl mt-2">04:10</p>
+                        <p className="font-bold text-xl mt-2">{timeText}</p>
                       </div>
                     )}
                     <button

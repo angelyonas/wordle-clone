@@ -1,34 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useContext } from 'react';
 import type { NextPage } from 'next';
-import { Layout, Game, Indications } from '../components';
+import { Layout, Game } from '../components';
+import { WordleContext } from '../context'
 
 const Home: NextPage = () => {
-  const [isVisited, setIsVisited] = useState(false);
+  const { addSecretWord, getStatsFromStorage } = useContext(WordleContext);
 
   useEffect(() => {
-    localStorage.theme = 'ligth';
-
-    if (
-      localStorage.theme === 'dark' ||
-      (!('theme' in localStorage) &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches)
-    ) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-
-    setIsVisited(Boolean(localStorage.visited));
+    addSecretWord();
+    getStatsFromStorage();
   }, []);
-
-  /**
-   * Handle on click in button play of indications
-   */
-  const handleOnPlay = () => setIsVisited(true);
 
   return (
     <Layout>
-      {isVisited ? <Game /> : <Indications onPlay={handleOnPlay} />}
+      <Game />
     </Layout>
   );
 };
