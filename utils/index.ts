@@ -1,1 +1,1 @@
-export * from "./stylesByStatus";
+export * from './stylesByStatus';
