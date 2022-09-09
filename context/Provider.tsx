@@ -313,7 +313,7 @@ export const WordleProvider = ({ children }: Props) => {
    */
   const getStatsFromStorage = () => {
     const currentTime = localStorage.currentTime;
-    let minutes = 0;
+    let minutes = 5;
     if (currentTime) {
       const finshedDate: number = new Date(parseInt(currentTime, 10)).getTime();
       const today: number = new Date().getTime();
@@ -325,7 +325,7 @@ export const WordleProvider = ({ children }: Props) => {
         localStorage.currentTime = '';
         localStorage.ws = '';
         localStorage.lettersUsed = '';
-        minutes = 0;
+        minutes = 5;
         addSecretWord();
       }
     }
